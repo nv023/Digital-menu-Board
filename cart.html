@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Sonic</title>
+  <!-- font awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/brands.min.css"
+    integrity="sha512-WxpJXPm/Is1a/dzEdhdaoajpgizHQimaLGL/QqUIAjIihlQqlPQb1V9vkGs9+VzXD7rgI6O+UsSKl4u5K36Ydw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+
+  <!-- link style css -->
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+
+<body class="container py-5">
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9 col-md-9 col-12">
+        <div class="cart-container">
+          <h2 class="mb-4">🛒 Cart</h2>
+          <a href="index.html">
+            <div class="back_button">
+              <svg xmlns="http://www.w3.org/2000/svg" class="back_btn" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                stroke="currentColor" className="size-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+            </div>
+          </a>
+
+          <div id="cartItems"></div>
+
+          <!-- Summary -->
+          <div class="summary">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="subtotal">₹ 0</span>
+            </div>
+            <div class="summary-row">
+              <span>GST</span>
+              <span id="delivery">₹ 0</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span id="grandTotal">₹ 0</span>
+            </div>
+          </div>
+
+          <a href="thank-you.html" class="btn btn-checkout order_btn">Order Now</a>
+          <!-- <a href="index.html" class="btn btn-secondary mt-3 w-100">Continue Shopping</a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap Bundle (includes Popper) -->
+  <script src="js/bootstrap.js"></script>
+
+  <!-- slick slider -->
+  <script src="js/slick.js"></script>
+
+  <!-- custome js -->
+  <script src="js/custom.js"></script>
+
+
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem("carts")) || [];
+    let cart1 = JSON.parse(localStorage.getItem("carts")) || [];
+    let cart2 = JSON.parse(localStorage.getItem("carts")) || [];
+
+    function loadCart() {
+      let cartItems = document.getElementById("cartItems");
+      cartItems.innerHTML = "";
+      let subtotal = 0;
+
+      cart.forEach((item, index) => {
+        let total = item.price * item.qty;
+        subtotal += total;
+        console.log("Loading image:", item.img);
+        cartItems.innerHTML += `
+        <div class="cart-item">
+          <div class="item-info">
+          <img src="${item.img}" alt="${item.name}">
+            <div class="item-details">
+              <h6>${item.name}</h6>
+              <small>₹${item.price} each</small>
+            </div>
+          </div>
+          <div>
+            <div class="qty-controls">
+              <button onclick="updateQty(${index}, -1)">-</button>
+              <span>${item.qty}</span>
+              <button onclick="updateQty(${index}, 1)">+</button>
+            </div>
+            <div class="text-end mt-1 fw-bold">₹${total}</div>
+          </div>
+        </div>
+      `;
+      });
+
+
+
+      let deliveryFee = subtotal > 0 ? 50 : 0;
+      let grandTotal = subtotal + deliveryFee;
+
+      document.getElementById("subtotal").innerText = "₹ " + subtotal;
+      document.getElementById("delivery").innerText = "₹ " + deliveryFee;
+      document.getElementById("grandTotal").innerText = "₹ " + grandTotal;
+    }
+
+    function updateQty(index, change) {
+      if (cart[index].qty + change > 0) {
+        cart[index].qty += change;
+      } else {
+        cart.splice(index, 1);
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    loadCart();
+  </script>
+
+
+</body>
+
+</html>
